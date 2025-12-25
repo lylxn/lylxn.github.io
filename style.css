@@ -259,3 +259,46 @@ body.light .logo-swap img {
 .logo-swap img {
   transition: filter 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
 }
+
+/* =====================
+   MOBILE RESPONSIVE FIX
+===================== */
+@media (max-width: 768px) {
+
+  .topnav {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  /* Logo smaller on mobile */
+  .logo-swap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .navbar-brand {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* Nav links stack nicely */
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .nav-links a,
+  .theme-btn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  /* Modal scales better */
+  .modal-box {
+    width: 90%;
+    max-width: 340px;
+  }
+}
