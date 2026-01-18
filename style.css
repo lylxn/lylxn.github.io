@@ -1,0 +1,443 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* =====================
+   THEMES
+===================== */
+body.light {
+  --bg: #f4f4f4;
+  --nav: #ffffff;
+  --pill: #d9d9d9;
+  --pill-hover: #eeeeee;
+  --text: #111;
+  --shadow: rgba(0, 0, 0, 0.25);
+}
+
+body.dark {
+  --bg: #0f0f0f;
+  --nav: #1a1a1a;
+  --pill: #2a2a2a;
+  --pill-hover: #3a3a3a;
+  --text: #f5f5f5;
+  --shadow: rgba(0, 0, 0, 0.7);
+}
+
+body.discord {
+  --bg: #313338;
+  --nav: #1e1f22;
+  --pill: #5865f2;
+  --pill-hover: #4752c4;
+  --text: #ffffff;
+  --shadow: rgba(88, 101, 242, 0.7);
+}
+
+/* =====================
+   BASE
+===================== */
+body {
+  background: var(--bg);
+  transition: background 0.4s ease;
+}
+
+.topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 16px;
+  padding: 14px 32px;
+
+  background: var(--nav);
+  border-radius: 18px;
+
+  box-shadow:
+    0 14px 30px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+
+  /* Sticky navigation */
+  position: sticky;
+  top: 16px;
+  z-index: 999;
+  transition: box-shadow 0.3s ease;
+}
+
+/* =====================
+   LOGO
+===================== */
+.navbar-brand {
+  width: 48px;
+  height: 48px;
+}
+
+.logo-swap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.logo-swap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  filter: grayscale(100%);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.logo-swap img:last-child {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.navbar-brand:hover img:first-child {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.navbar-brand:hover img:last-child {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* =====================
+   NAV
+===================== */
+.nav-links {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.nav-links a,
+.theme-btn {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  background: var(--pill);
+  box-shadow:
+    0 6px 14px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover,
+.theme-btn:hover {
+  background: var(--pill-hover);
+  transform: translateY(-2px);
+}
+
+.theme-btn {
+  border: none;
+  cursor: pointer;
+}
+
+/* =====================
+   MODAL
+===================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background: var(--nav);
+  color: var(--text);
+  padding: 32px;
+  border-radius: 22px;
+  text-align: center;
+
+  width: min(90%, 360px);
+
+  box-shadow:
+    0 20px 50px var(--shadow);
+
+  transform: scale(0.9);
+  transition: transform 0.35s ease;
+}
+
+.modal.active .modal-box {
+  transform: scale(1);
+}
+
+.modal-box h2 {
+  margin-bottom: 10px;
+}
+
+.modal-box p {
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+.modal-box button {
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+
+  background: var(--pill);
+  color: var(--text);
+}
+
+/* ===== LOGO FIX (FOR CURRENT HTML) ===== */
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  position: relative;
+  z-index: 5;
+}
+
+.logo-swap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+/* Make sure images render & don't block clicks */
+.logo-swap img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* =====================
+   LOGO COLOR REVERSE IN LIGHT MODE
+===================== */
+
+/* Default (dark & discord) */
+.logo-swap img {
+  filter: none;
+}
+
+/* Light mode → invert logo colors */
+body.light .logo-swap img {
+  filter: invert(1);
+}
+
+/* =====================
+   LOGO FILTER ORDER
+===================== */
+
+/* Default (dark & discord) */
+.logo-swap img {
+  filter: grayscale(100%);
+  transition: filter 0.25s ease;
+}
+
+/* Light mode: grayscale → invert */
+body.light .logo-swap img {
+  filter: grayscale(100%) invert(1);
+}
+
+.logo-swap img {
+  transition: filter 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* =====================
+   MOBILE RESPONSIVE FIX
+===================== */
+@media (max-width: 768px) {
+
+  .topnav {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  /* Logo smaller on mobile */
+  .logo-swap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .navbar-brand {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* Nav links stack nicely */
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .nav-links a,
+  .theme-btn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  /* Modal scales better */
+  .modal-box {
+    width: 90%;
+    max-width: 340px;
+  }
+}
+
+/* =====================
+   IMAGE HANDLING IN LIGHT MODE
+===================== */
+/* We swap the hero image via JS instead of applying a blanket invert to all images.
+   This prevents unintended double-inversion on the light variant. */
+
+/* Top / hero image */
+.top-image,
+#portfolioImage {
+  width: 100%;
+  max-height: calc(100vh - 140px);
+  object-fit: contain;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.top-image.show,
+#portfolioImage.show {
+  opacity: 1;
+}
+
+
+@media (max-width: 600px) {
+  #portfolioImage {
+    max-height: 60vh;
+  }
+}
+
+/* =====================
+   404 ERROR PAGE
+===================== */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 32px 16px;
+}
+
+.error-content {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.error-code {
+  font-size: 120px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 16px;
+  color: var(--text);
+  opacity: 0.9;
+  letter-spacing: -2px;
+}
+
+.error-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.error-message {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.error-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--pill);
+  box-shadow:
+    0 6px 14px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.error-btn:hover {
+  background: var(--pill-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 18px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.error-btn.secondary {
+  background: transparent;
+  border: 2px solid var(--pill);
+  box-shadow: none;
+}
+
+.error-btn.secondary:hover {
+  background: var(--pill);
+  border-color: var(--pill-hover);
+}
+
+@media (max-width: 768px) {
+  .error-code {
+    font-size: 80px;
+  }
+
+  .error-title {
+    font-size: 24px;
+  }
+
+  .error-message {
+    font-size: 16px;
+  }
+
+  .error-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
