@@ -1,0 +1,989 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* =====================
+   THEMES
+===================== */
+body.light {
+  --bg: #f4f4f4;
+  --nav: #ffffff;
+  --pill: #d9d9d9;
+  --pill-hover: #eeeeee;
+  --text: #111;
+  --shadow: rgba(0, 0, 0, 0.25);
+}
+
+body.dark {
+  --bg: #0f0f0f;
+  --nav: #1a1a1a;
+  --pill: #2a2a2a;
+  --pill-hover: #3a3a3a;
+  --text: #f5f5f5;
+  --shadow: rgba(0, 0, 0, 0.7);
+}
+
+body.discord {
+  --bg: #313338;
+  --nav: #1e1f22;
+  --pill: #5865f2;
+  --pill-hover: #4752c4;
+  --text: #ffffff;
+  --shadow: rgba(88, 101, 242, 0.7);
+}
+
+/* =====================
+   BASE
+===================== */
+body {
+  background: var(--bg);
+  transition: background 0.4s ease;
+}
+
+.topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 16px;
+  padding: 14px 32px;
+
+  background: var(--nav);
+  border-radius: 18px;
+
+  box-shadow:
+    0 14px 30px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+
+  /* Sticky navigation */
+  position: sticky;
+  top: 16px;
+  z-index: 999;
+  transition: box-shadow 0.3s ease;
+}
+
+/* =====================
+   LOGO
+===================== */
+.navbar-brand {
+  width: 48px;
+  height: 48px;
+}
+
+.logo-swap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.logo-swap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  filter: grayscale(100%);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.logo-swap img:last-child {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.navbar-brand:hover img:first-child {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.navbar-brand:hover img:last-child {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* =====================
+   NAV
+===================== */
+.nav-links {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.nav-links a,
+.theme-btn {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  background: var(--pill);
+  box-shadow:
+    0 6px 14px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover,
+.theme-btn:hover {
+  background: var(--pill-hover);
+  transform: translateY(-2px);
+}
+
+.theme-btn {
+  border: none;
+  cursor: pointer;
+}
+
+/* =====================
+   MODAL
+===================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background: var(--nav);
+  color: var(--text);
+  padding: 32px;
+  border-radius: 22px;
+  text-align: center;
+
+  width: min(90%, 360px);
+
+  box-shadow:
+    0 20px 50px var(--shadow);
+
+  transform: scale(0.9);
+  transition: transform 0.35s ease;
+}
+
+.modal.active .modal-box {
+  transform: scale(1);
+}
+
+.modal-box h2 {
+  margin-bottom: 10px;
+}
+
+.modal-box p {
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+.modal-box button {
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+
+  background: var(--pill);
+  color: var(--text);
+}
+
+/* ===== LOGO FIX (FOR CURRENT HTML) ===== */
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  position: relative;
+  z-index: 5;
+}
+
+.logo-swap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+/* Make sure images render & don't block clicks */
+.logo-swap img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* =====================
+   LOGO COLOR REVERSE IN LIGHT MODE
+===================== */
+
+/* Default (dark & discord) */
+.logo-swap img {
+  filter: none;
+}
+
+/* Light mode → invert logo colors */
+body.light .logo-swap img {
+  filter: invert(1);
+}
+
+/* =====================
+   LOGO FILTER ORDER
+===================== */
+
+/* Default (dark & discord) */
+.logo-swap img {
+  filter: grayscale(100%);
+  transition: filter 0.25s ease;
+}
+
+/* Light mode: grayscale → invert */
+body.light .logo-swap img {
+  filter: grayscale(100%) invert(1);
+}
+
+.logo-swap img {
+  transition: filter 0.35s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* =====================
+   MOBILE RESPONSIVE FIX
+===================== */
+@media (max-width: 768px) {
+
+  .topnav {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  /* Logo smaller on mobile */
+  .logo-swap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .navbar-brand {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* Nav links stack nicely */
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .nav-links a,
+  .theme-btn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  /* Modal scales better */
+  .modal-box {
+    width: 90%;
+    max-width: 340px;
+  }
+}
+
+/* =====================
+   IMAGE HANDLING IN LIGHT MODE
+===================== */
+/* We swap the hero image via JS instead of applying a blanket invert to all images.
+   This prevents unintended double-inversion on the light variant. */
+
+/* Top / hero image */
+.top-image,
+#portfolioImage {
+  width: 100%;
+  max-height: calc(100vh - 140px);
+  object-fit: contain;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.top-image.show,
+#portfolioImage.show {
+  opacity: 1;
+}
+
+
+@media (max-width: 600px) {
+  #portfolioImage {
+    max-height: 60vh;
+  }
+}
+
+/* =====================
+   SCROLL INDICATOR
+===================== */
+.scroll-indicator {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 28px;
+  z-index: 60;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-indicator:focus {
+  outline: 3px solid var(--pill-hover);
+  border-radius: 12px;
+}
+
+.si-dot {
+  width: 12px;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--pill);
+  box-shadow: 0 6px 14px var(--shadow);
+  opacity: 0.95;
+  transform-origin: center;
+}
+
+.si-arrow {
+  width: 14px;
+  height: 14px;
+  border-left: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+  transform: rotate(-45deg);
+  display: block;
+  margin-top: 4px;
+  animation: si-bounce 1.6s infinite;
+  opacity: 0.95;
+}
+
+@keyframes si-bounce {
+  0%   { transform: translateY(0) rotate(-45deg); }
+  50%  { transform: translateY(6px) rotate(-45deg); }
+  100% { transform: translateY(0) rotate(-45deg); }
+}
+
+.scroll-indicator.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .scroll-indicator { display: none; }
+}
+
+/* 1. Enable Smooth Scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 2. Custom Scrollbar Styling (WebKit Browsers like Chrome/Safari) */
+::-webkit-scrollbar {
+  width: 8px; /* Slimmer for a modern look */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Makes the track invisible */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pill); /* Uses your theme color */
+  border-radius: 20px;
+  /* Add a border the same color as your BG to create a "padding" effect */
+  border: 2px solid var(--bg); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pill-hover);
+}
+
+/* 3. Modern Standard (Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pill) transparent;
+}
+
+#scrollProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background: var(--pill);
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+/* =====================
+   NEWSLETTER / POSTS
+===================== */
+.newsletter-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.newsletter-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.newsletter-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.newsletter-subtitle {
+  font-size: 18px;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.post-card {
+  background: var(--nav);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow:
+    0 14px 30px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 40px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.post-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.6;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.post-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.post-content {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  opacity: 0.9;
+  white-space: pre-line;
+}
+
+/* Embedded media styling */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 20px 0;
+  display: block;
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+.post-content video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 20px 0;
+  display: block;
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+.post-content iframe {
+  max-width: 100%;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  margin: 20px 0;
+  display: block;
+  box-shadow: 0 8px 20px var(--shadow);
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 400px;
+}
+
+/* YouTube embed container */
+.post-content .embed-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 20px 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+.post-content .embed-container iframe,
+.post-content .embed-container object,
+.post-content .embed-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+
+/* Links in content */
+.post-content a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--pill);
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
+}
+
+.post-content a:hover {
+  text-decoration-color: var(--pill-hover);
+  opacity: 0.8;
+}
+
+/* Media links */
+.post-content .media-link {
+  display: inline-block;
+  margin: 10px 0;
+  text-decoration: none;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.post-content .media-link:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.post-content .media-link img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Video link styling */
+.post-content .video-link {
+  background: var(--pill);
+  padding: 16px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.post-content .video-link:hover {
+  background: var(--pill-hover);
+  border-color: var(--pill-hover);
+}
+
+.post-content .video-link-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+}
+
+.post-content .video-icon {
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+.post-content .video-link-container span {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Code blocks */
+.post-content code {
+  background: var(--pill);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.post-content pre {
+  background: var(--pill);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.post-content pre code {
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+}
+
+/* Prism.js code blocks styling */
+.post-content pre[class*="language-"] {
+  background: var(--pill);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.post-content code[class*="language-"] {
+  font-family: 'Courier New', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+/* Ensure code blocks are scrollable on mobile */
+@media (max-width: 768px) {
+  .post-content pre,
+  .post-content pre[class*="language-"] {
+    padding: 12px;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  
+  .post-content code[class*="language-"] {
+    font-size: 13px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 64px 32px;
+  background: var(--nav);
+  border-radius: 20px;
+  box-shadow:
+    0 14px 30px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.empty-state h3 {
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+/* =====================
+   NEWSLETTER SIGNUP
+===================== */
+.signup-section {
+  margin-top: 48px;
+  padding: 32px;
+  background: var(--nav);
+  border-radius: 20px;
+  box-shadow:
+    0 14px 30px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.signup-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  text-align: center;
+}
+
+.signup-description {
+  font-size: 16px;
+  color: var(--text);
+  opacity: 0.7;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.signup-form {
+  display: flex;
+  gap: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.signup-input {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-family: inherit;
+  background: var(--pill);
+  color: var(--text);
+  box-shadow:
+    0 6px 14px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  transition: all 0.2s ease;
+}
+
+.signup-input:focus {
+  outline: none;
+  background: var(--pill-hover);
+  box-shadow:
+    0 8px 18px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.signup-input::placeholder {
+  color: var(--text);
+  opacity: 0.5;
+}
+
+.signup-btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--pill);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow:
+    0 6px 14px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.signup-btn:hover {
+  background: var(--pill-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 18px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.signup-btn:active {
+  transform: translateY(0);
+}
+
+.signup-message {
+  margin-top: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.signup-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.signup-message.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.signup-message.error {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* =====================
+   EASTER EGG MODAL
+===================== */
+#easterEggArea {
+  min-height: 100px;
+  padding: 32px 0;
+}
+
+.easter-egg-box {
+  max-width: 420px;
+  animation: easterEggPop 0.5s ease;
+}
+
+@keyframes easterEggPop {
+  0% {
+    transform: scale(0.8) rotate(-5deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.easter-egg-box h2 {
+  font-size: 32px;
+  margin-bottom: 16px;
+  color: var(--text);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.easter-egg-subtext {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.easter-egg-btn {
+  margin-top: 8px;
+  padding: 12px 32px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  background: var(--pill);
+  color: var(--text);
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 6px 14px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.easter-egg-btn:hover {
+  background: var(--pill-hover);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 8px 18px var(--shadow),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.easter-egg-btn:active {
+  transform: translateY(0) scale(1);
+}
+
+@media (max-width: 768px) {
+  .newsletter-container {
+    padding: 32px 16px;
+  }
+
+  .newsletter-title {
+    font-size: 36px;
+  }
+
+  .newsletter-subtitle {
+    font-size: 16px;
+  }
+
+  .post-card {
+    padding: 24px;
+  }
+
+  .post-title {
+    font-size: 24px;
+  }
+
+  .post-content {
+    font-size: 15px;
+  }
+
+  .post-content img,
+  .post-content video,
+  .post-content iframe {
+    margin: 16px 0;
+  }
+
+  .post-content .embed-container {
+    margin: 16px 0;
+  }
+
+  .post-content iframe {
+    min-height: 250px;
+  }
+
+  .signup-section {
+    padding: 24px;
+    margin-top: 32px;
+  }
+
+  .signup-title {
+    font-size: 20px;
+  }
+
+  .signup-description {
+    font-size: 14px;
+  }
+
+  .signup-form {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .signup-input,
+  .signup-btn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+
+  .easter-egg-box {
+    max-width: 90%;
+  }
+
+  .easter-egg-box h2 {
+    font-size: 24px;
+  }
+}

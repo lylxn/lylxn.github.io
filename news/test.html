@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Syntax Highlighting</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body style="background: #0f0f0f; color: #f5f5f5; padding: 20px;">
+  <h1>Testing Content Processor</h1>
+
+  <div id="test-content">
+    Here's a test post with various content types:
+
+    Python code example:
+    python```a = "hello world"
+    print(a)
+    for i in range(3):
+        print(f"Count: {i}")```
+
+    JavaScript example:
+    javascript```const greeting = "Hello, World!";
+    console.log(greeting);
+
+    function sayHello(name) {
+        return `Hello, ${name}!`;
+    }```
+
+    Media embedding examples:
+
+    **Embedded YouTube video:**
+    [youtube](https://www.youtube.com/watch?v=W6NZfCO5SIk)
+
+    **Direct YouTube URL (auto-detected):**
+    https://www.youtube.com/watch?v=W6NZfCO5SIk
+
+    **Embedded image:**
+    ![Sample Image](https://picsum.photos/600/300?random=1)
+
+    **Linked image (clickable):**
+    [image](https://picsum.photos/400/200?random=2)
+
+    **Embedded video file:**
+    [video](https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4)
+
+    **Linked video file:**
+    [video-link](https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4)
+
+    **Auto-detected image URL:**
+    https://picsum.photos/500/250?random=3
+
+    **Auto-detected video URL:**
+    https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_1mb.mp4
+
+    And here's an inline `code snippet` that should be highlighted.
+  </div>
+
+  <script>
+    // Copy the functions from script.js
+    function processPostContent(content) {
+      if (!content) return '';
+
+      // Convert code blocks: language```code```
+      content = content.replace(/(\w+)\s*```([\s\S]*?)```/g, (match, language, code) => {
+        // Trim whitespace and handle line breaks
+        code = code.trim();
+        return `<pre><code class="language-${language}">${escapeHtml(code)}</code></pre>`;
+      });
+
+      // Convert inline code: `code`
+      content = content.replace(/`([^`\n]+)`/g, (match, code) => {
+        return `<code>${escapeHtml(code)}</code>`;
+      });
+
+      // Convert image links: ![alt](url) or direct image URLs
+      content = content.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+        return `<img src="${url}" alt="${alt}" loading="lazy">`;
+      });
+
+      // Convert video embeds: [video](url) or direct video URLs ending in .mp4, .webm, .ogg
+      content = content.replace(/\[video\]\(([^)]+)\)/g, (match, url) => {
+        return `<video controls><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+      });
+
+      // Auto-detect video files
+      content = content.replace(/(https?:\/\/[^\s]+\.(mp4|webm|ogg|mov|avi))(\s|$)/gi, (match, url) => {
+        const extension = url.split('.').pop().toLowerCase();
+        let mimeType = 'video/mp4';
+        if (extension === 'webm') mimeType = 'video/webm';
+        else if (extension === 'ogg') mimeType = 'video/ogg';
+        return `<video controls style="max-width: 100%;"><source src="${url}" type="${mimeType}">Your browser does not support the video tag.</video>`;
+      });
+
+      // Convert YouTube embeds: [youtube](url) or direct YouTube URLs
+      content = content.replace(/\[youtube\]\(([^)]+)\)/g, (match, url) => {
+        const videoId = extractYouTubeId(url);
+        if (videoId) {
+          return `<div class="embed-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        }
+        return match;
+      });
+
+      // Auto-detect YouTube URLs
+      content = content.replace(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi, (match, videoId) => {
+        return `<div class="embed-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+      });
+
+      // Convert links: [text](url)
+      content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      });
+
+      // Convert line breaks to paragraphs (simple approach)
+      content = content.replace(/\n\n+/g, '</p><p>');
+      content = '<p>' + content + '</p>';
+      content = content.replace(/<p><\/p>/g, '');
+
+      return content;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function extractYouTubeId(url) {
+      const patterns = [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&\n?#]+)/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^&\n?#]+)/,
+        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^&\n?#]+)/
+      ];
+
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) return match[1];
+      }
+      return null;
+    }
+
+    // Process the content
+    window.addEventListener('load', () => {
+      const testContent = document.getElementById('test-content');
+      const rawContent = testContent.textContent || testContent.innerHTML;
+      testContent.innerHTML = processPostContent(rawContent);
+
+      // Apply Prism.js syntax highlighting
+      setTimeout(() => {
+        if (typeof Prism !== 'undefined') {
+          const codeElements = document.querySelectorAll('code[class*="language-"]');
+          codeElements.forEach(code => {
+            Prism.highlightElement(code);
+          });
+        }
+      }, 100);
+    });
+  </script>
+
+  <style>
+    body { font-family: monospace; }
+    pre { background: #2a2a2a; padding: 16px; border-radius: 8px; margin: 16px 0; overflow-x: auto; }
+    code { background: #333; padding: 2px 6px; border-radius: 4px; }
+    .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 20px 0; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.7); }
+    .embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px; }
+    p { margin: 16px 0; line-height: 1.6; }
+  </style>
+</body>
+</html>
